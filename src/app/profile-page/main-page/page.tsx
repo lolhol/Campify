@@ -24,6 +24,7 @@ import {
 } from "@/app/component/dashboard/IdentificationBox";
 import { useEffect, useRef, useState } from "react";
 import { ImageWithEditButton } from "@/app/component/dashboard/DashboardUtil";
+import { useRouter } from "next/navigation";
 
 export default function MainDashboardPage() {
   const [profilePic, setProfilePic] = useState<boolean>(false);
@@ -31,13 +32,22 @@ export default function MainDashboardPage() {
     false,
     false,
   ]);
+  const router = useRouter();
 
   return (
     <main className="bg-slate-100 w-full h-screen">
       <div className="h-full w-full flex flex-col">
         <DashboardNavBar className="h-12 mt-1">
           <NavBarMainText>
-            <a className="cursor-pointer">Campify</a>
+            <a
+              className="cursor-pointer"
+              onClick={() => {
+                console.log("redirecting");
+                router.push("/");
+              }}
+            >
+              Campify
+            </a>
           </NavBarMainText>
         </DashboardNavBar>
 
