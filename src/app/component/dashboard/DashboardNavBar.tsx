@@ -6,7 +6,7 @@ interface DashboardNavBarProps {
 
 export function DashboardNavBar(props: DashboardNavBarProps) {
   return (
-    <div className={cx("flex justify-between w-full h-full", props.className)}>
+    <div className={cx("flex justify-between", props.className)}>
       {props.children}
     </div>
   );
@@ -22,6 +22,17 @@ export function NavBarImageText(props: {
       <div className="text-black w-2/3 text-2xl font-sans flex justify-center items-center">
         {props.children[1]}
       </div>
+    </div>
+  );
+}
+
+export function NavBarMainText(props: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className="text-black text-4xl font-black font-sans flex justify-center items-center ml-5">
+      {props.children}
     </div>
   );
 }

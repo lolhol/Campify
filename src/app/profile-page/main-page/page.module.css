@@ -5,3 +5,7 @@
 .settingsButton:hover {
   transform: rotate(90deg);
 }
+
+.onOverProfilePage {
+  transition: all 0.25s ease-in-out;
+}
