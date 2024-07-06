@@ -50,3 +50,15 @@ export function SwitchTextFont(
     </a>
   );
 }
+
+export function TextWithImageLeft(props: {
+  children: [React.ReactNode, React.ReactNode];
+  className?: string;
+}) {
+  return (
+    <div className={cx("flex", props.className)}>
+      <div className="h-full">{props.children[0]}</div>
+      <div className="w-2/3 ml-3 my-auto">{props.children[1]}</div>
+    </div>
+  );
+}
