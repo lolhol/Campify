@@ -1,0 +1,14 @@
+.onCopyAnimation {
+  animation: onCopy 0.3s ease-in-out;
+}
+
+@keyframes onCopy {
+  0% {
+    translate: 0% 0%;
+    opacity: 1;
+  }
+  100% {
+    translate: 0% -100%;
+    opacity: 0;
+  }
+}

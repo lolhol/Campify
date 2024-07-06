@@ -21,10 +21,20 @@ import {
   TextWithImageLeft,
   RegularText,
   AccountAboutMeComponent,
+  EditBox,
 } from "@/app/component/dashboard/IdentificationBox";
 import { useEffect, useRef, useState } from "react";
 import { ImageWithEditButton } from "@/app/component/dashboard/DashboardUtil";
 import { useRouter } from "next/navigation";
+import { OnTextCopyAnimation } from "@/app/component/util/AnimationUtil";
+import { CopyText } from "../../component/dashboard/IdentificationBox";
+import {
+  HeadText,
+  MainStatistics,
+  MainStatisticsBody,
+  StatisticsWheel,
+} from "@/app/component/dashboard/MainStatistics";
+import { MainStatisticsHead } from "../../component/dashboard/MainStatistics";
 
 export default function MainDashboardPage() {
   const [profilePic, setProfilePic] = useState<boolean>(false);
@@ -32,7 +42,30 @@ export default function MainDashboardPage() {
     false,
     false,
   ]);
+  const [profileAboutMe, setProfileAboutMe] = useState<string>("");
+  const [clickAboutMe, setClickAboutMe] = useState<boolean>(false);
   const router = useRouter();
+  const [copied, setCopied] = useState<boolean>(false);
+
+  function copyToClipboard(text: string) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    } else {
+      // Fallback for browsers that do not support the Clipboard API
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        console.log("Text copied to clipboard");
+      } catch (err) {
+        console.error("Could not copy text: ", err);
+      }
+      document.body.removeChild(textArea);
+    }
+  }
 
   return (
     <main className="bg-slate-100 w-full h-screen">
@@ -68,69 +101,80 @@ export default function MainDashboardPage() {
                     alt={"1"}
                     width={500}
                     height={500}
-                    className="w-40 rounded-full border-4"
+                    className="w-64 rounded-full border-4"
                   />
                 </BoxImageComponent>
                 <BoxHeaderTextComponent className="mt-5">
                   Benjamin Dover
                 </BoxHeaderTextComponent>
-                <BoxBodyTextComponent className="mt-2">
-                  BenjaminDover@pinewood.edu
-                </BoxBodyTextComponent>
+                <RegularText className="ml-1 text-xl font-medium flex select-none">
+                  <a
+                    className="cursor-pointer"
+                    onClick={() => {
+                      copyToClipboard("@benjaminbover"); /// TODO: THIS NEEDS TO BE REPLACED
+                      setCopied(true);
+                      setTimeout(() => {
+                        setCopied(false);
+                      }, 1000);
+                    }}
+                  >
+                    @benjaminbover
+                  </a>
+                  {copied && <CopyText>Copied!</CopyText>}
+                </RegularText>
+                <div className="flex flex-col mt-5">
+                  <BoxBodyTextComponent className="ml-1">
+                    Member since Jun 4, 2024
+                  </BoxBodyTextComponent>
+                  <BoxBodyTextComponent className="ml-1">
+                    BenjaminDover@pinewood.edu
+                  </BoxBodyTextComponent>
+                </div>
                 <LineSeparator className="mt-3" />
-                <TextWithImageLeft
+                <AccountAboutMeComponent
                   className="mt-3"
-                  onMouseEnterImage={() => setProfilePic(true)}
-                  onMouseLeaveImage={() => setProfilePic(false)}
-                  onImageClick={() => {
-                    /*REDIRECT TO PFP CHANGE MENU*/
+                  onClick={() => {
+                    setClickAboutMe(true);
                   }}
                 >
-                  {!profilePic ? (
-                    <Image
-                      src={"/default_pfp.svg"}
-                      alt={"1"}
-                      width={500}
-                      height={500}
-                      className="h-full w-fit"
-                    />
-                  ) : (
-                    <ImageWithEditButton>
-                      <Image
-                        src={"/default_pfp.svg"}
-                        alt={"1"}
-                        width={500}
-                        height={500}
-                        className="h-full w-fit rounded-full border-2 border-black"
-                      />
-                    </ImageWithEditButton>
-                  )}
-                  <a className="cursor-pointer" onClick={() => {}}>
-                    benjaminbover
-                  </a>
-                </TextWithImageLeft>
-                <AccountAboutMeComponent className="mt-3">
                   <RegularText className="text-md font-semibold">
                     About Me:
                   </RegularText>
                   <RegularText>
-                    Welcome to my personal page! This is the About Me section
-                    where you can learn more about who I am, what I do, and what
-                    drives me.
+                    {(clickAboutMe && (
+                      <EditBox
+                        className="ml-1"
+                        onSubmit={(e: string | null) => {
+                          setClickAboutMe(false);
+                          if (e == null) return;
+                          setProfileAboutMe(e);
+                        }}
+                        defaultValue={profileAboutMe}
+                      />
+                    )) || (
+                      <a>
+                        {profileAboutMe == ""
+                          ? "Click here to edit"
+                          : profileAboutMe}
+                      </a>
+                    )}
                   </RegularText>
                 </AccountAboutMeComponent>
               </IdentificationBoxComponentGroup>
             </IdentificationBox>
 
-            <div
-              className={cx(
-                isHoveringPfp[1] ? "shadow-2xl" : "shadow-lg",
-                "w-full bg-white mx-9 rounded-xl",
-                css.onOverProfilePage
-              )}
+            <MainStatistics
+              className={cx(css.onOverProfilePage)}
+              hovering={isHoveringPfp[1]}
               onMouseEnter={() => setIsHoveringPfp([isHoveringPfp[0], true])}
               onMouseLeave={() => setIsHoveringPfp([isHoveringPfp[0], false])}
-            ></div>
+            >
+              <MainStatisticsBody>
+                <StatisticsWheel
+                  percents={[20, 10, 15, 10, 5, 3, 2]}
+                ></StatisticsWheel>
+              </MainStatisticsBody>
+            </MainStatistics>
           </div>
         </div>
       </div>
