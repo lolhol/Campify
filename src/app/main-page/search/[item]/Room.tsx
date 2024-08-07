@@ -6,9 +6,13 @@ import {
   RoomProvider,
   ClientSideSuspense,
 } from "@liveblocks/react/suspense";
-import { useDeleteComment } from "@liveblocks/react";
 import { createClient } from "@liveblocks/core";
-import { client } from "@/app/main-page/search/camp-item/liveblocks";
+import { client } from "@/app/main-page/search/[item]/liveblocks";
+import { ProfanityFilterResponse } from "@/interfaces/response/ProfanityFilter";
+import {
+  ProfanityFilterRequest,
+  ProfanityFilterType,
+} from "@/interfaces/request/ProfanityFilter";
 
 export function Room({
   children,
@@ -17,17 +21,42 @@ export function Room({
   children: ReactNode;
   chat_id: string;
 }) {
-  const client = createClient({
-    publicApiKey:
-      "pk_prod_Bp7SldOdLpuGgvzJppQt0UyxMyH9wagU5MdIeL6OyqZ3JuyqELI5hIH2hYtw_RrN",
-  });
   useEffect(() => {
-    const unsubscribe = client
-      .getRoom(chat_id)
-      ?.events.comments.subscribe((event) => {
-        console.log(event + "!!!!!!!");
-      });
-  }, [client]);
+    console.log("Effect runs only once per page load");
+    client.enterRoom(chat_id);
+    const room = client.getRoom(chat_id);
+
+    const unsub = room?.events.comments.subscribe((event) => {
+      if (event.type === 402) {
+        const request: ProfanityFilterRequest = {
+          message: {
+            roomId: chat_id,
+            threadId: event.threadId,
+            commentId: event.commentId,
+          },
+          filtersToUse: [
+            ProfanityFilterType.PROFANITY_API,
+            ProfanityFilterType.CHATGPT,
+          ],
+        };
+        console.log(request);
+        console.log("Requesting!");
+        fetch(`/api/school/filter`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(request),
+        }).then((_) => {});
+      }
+    });
+
+    return () => {
+      if (unsub) {
+        unsub();
+      }
+    };
+  }, [chat_id]);
 
   return (
     <LiveblocksProvider

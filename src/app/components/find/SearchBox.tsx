@@ -6,11 +6,11 @@ import cx from "classnames";
 
 const options = [{ value: "1", label: "1" }];
 
-export function FindWindow(props: { className?: string }) {
+export function SearchBox(props: { className?: string }) {
   return (
-    <div className="w-full flex justify-center mt-10">
+    <div className="w-full flex justify-center">
       <Select
-        className={cx(props.className, "w-full h-full mx-20")}
+        className={cx(props.className, "w-full h-full")}
         styles={{
           control: (styles) => ({
             ...styles,
@@ -25,7 +25,7 @@ export function FindWindow(props: { className?: string }) {
             fontSize: "20px",
           }),
         }}
-        placeholder="Search ..."
+        placeholder="Search..."
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,

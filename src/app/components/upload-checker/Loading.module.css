@@ -1,0 +1,60 @@
+/* components/Loader.module.css */
+
+.loader {
+  position: relative;
+  animation: fadeOut 0.5s ease-in-out forwards, shrink 0.5s ease-in-out forwards,
+    rotateOut 0.5s ease-in-out forwards;
+  animation-delay: 1.5s; /* Adjust delay to match your request duration */
+}
+
+.resultIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: scale(0.5);
+  animation: fadeIn 0.5s ease-in-out forwards, grow 0.5s ease-in-out forwards,
+    rotateIn 0.5s ease-in-out forwards;
+  animation-delay: 1.5s;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shrink {
+  to {
+    transform: scale(0.5);
+  }
+}
+
+@keyframes grow {
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateOut {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateIn {
+  to {
+    transform: rotate(0deg);
+  }
+}

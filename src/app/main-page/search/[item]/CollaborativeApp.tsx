@@ -22,7 +22,7 @@ export function CollaborativeApp() {
       <Composer
         className={"rounded-lg"}
         onSubmit={async (event) => {
-          event.preventDefault();
+          /*event.preventDefault();
           console.log((event.target as any).textContent);
           const res: ProfanityFilterResponse = await (
             await fetch(`/api/school/filter/ProfanityAPI`, {
@@ -41,7 +41,7 @@ export function CollaborativeApp() {
           if (!res.isProfanity) {
             event.preventDefault();
             console.log(event);
-          }
+          }*/
         }}
       />
     </div>

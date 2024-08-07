@@ -10,14 +10,37 @@ import {
   UploadCheckerMainTextBox,
   UploadCheckerBody,
 } from "@/app/components/upload-checker/UploadChecker";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function UploadCheck({
   params,
 }: {
   params: { campId: string };
 }) {
-  useEffect(() => {}, []);
+  const { data: sessionData } = useSession();
+  const [isDone, setIsDone] = useState(false);
+  const [isProfane, setIsProfane] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/school/filter/camp-filter-and-set-online`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        campId: params.campId,
+        userId: sessionData?.user.id,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        setIsDone(true);
+        res.json().then((res) => {
+          setIsProfane(res.profane);
+        });
+      }
+    });
+  }, [sessionData]);
 
   return (
     <main className="w-full h-full">
@@ -25,7 +48,7 @@ export default function UploadCheck({
         <UploadCheckerHead>
           <UploadCheckerMainTextBox>
             <UploadCheckerMainHeaderText>
-              Checking the camp
+              Analizing your camp!
             </UploadCheckerMainHeaderText>
             <UploadCheckerDescHeaderText>
               Please wait while we check the camp for profane or inappropriate
@@ -35,7 +58,11 @@ export default function UploadCheck({
         </UploadCheckerHead>
         <UploadCheckerBody>
           <div className="w-52 h-52">
-            <Loading />
+            <Loading
+              isRequestDone={isDone}
+              isRequestValid={!isProfane}
+              redirectTo={"/main-page/search"}
+            />
           </div>
         </UploadCheckerBody>
       </UploadChecker>

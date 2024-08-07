@@ -21,14 +21,14 @@ export async function POST(request: Request) {
   if (
     !(await handleProfanityFilter(dbResult[0].name)).isProfanity &&
     !(await handleProfanityFilter(dbResult[0].description)).isProfanity &&
-    (await handleChatGPTFilter(dbResult[0].description)) < 70 &&
-    (await handleChatGPTFilter(dbResult[0].name)) < 70
+    (await handleChatGPTFilter(dbResult[0].description)) != 100 &&
+    (await handleChatGPTFilter(dbResult[0].name)) != 100
   ) {
     if (dbResult[0].short_description) {
       if (
         !(await handleProfanityFilter(dbResult[0].short_description))
           .isProfanity &&
-        (await handleChatGPTFilter(dbResult[0].short_description)) < 70
+        (await handleChatGPTFilter(dbResult[0].short_description)) != 100
       ) {
         profane = false;
       }
@@ -39,8 +39,12 @@ export async function POST(request: Request) {
 
   if (!profane) {
     await sql`UPDATE camp
-    SET 
+    SET is_public = true
     WHERE id = ${json.campId}`;
+
+    await sql`UPDATE account
+    SET editing_camp_id = null
+    WHERE id = ${json.userId}`;
   }
 
   return Response.json({

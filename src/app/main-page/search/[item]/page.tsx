@@ -2,6 +2,7 @@
 
 import {
   CampItem,
+  CampItemChatComponent,
   CampItemContent,
   CampItemDividerLine,
   CampItemHead,
@@ -24,22 +25,10 @@ import { Room } from "./Room";
 import { CollaborativeApp } from "./CollaborativeApp";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Camp } from "@/interfaces/util/Camp";
 
-export interface Camp {
-  id: number;
-  likes: number;
-  comments: number;
-  description: string;
-  name: string;
-  image_url: string | null;
-}
-
-// TODO: add chat functionality
-export default function Profile() {
+export default function Item({ params }: { params: { item: string } }) {
   const [campData, setCampData] = useState<Camp | null>(null);
-  const searchParams = useSearchParams();
-  const campID = parseInt(searchParams.get("id") ?? "");
-
   async function getCampData(id: number): Promise<Camp> {
     const res = await fetch(`/api/school/db/camp/${id}`, {
       method: "POST",
@@ -47,25 +36,14 @@ export default function Profile() {
         "Content-Type": "application/json",
       },
     });
-    if (!res.ok) {
-      throw new Error("Failed to fetch camp data");
-    }
     return await res.json();
   }
-  useEffect(() => {
-    async function fetchCampData() {
-      if (campID) {
-        const data = await getCampData(campID);
-        setCampData(data);
-      }
-    }
-    fetchCampData();
-  }, [campID]);
 
-  const name = "Test Camp"; // TODO: make an api for this.
-  const description =
-    "Nestled in the heart of the great outdoors, Adventure Camp offers an unparalleled experience for thrill-seekers and nature enthusiasts alike. Our diverse range of activities caters to all interests and skill levels, ensuring every camper finds their perfect adventure. From rock climbing and zip-lining to serene nature hikes and canoeing on a tranquil lake, there's something for everyone. Our dedicated team of experienced guides ensures a safe and exciting environment, encouraging campers to step out of their comfort zones and create lasting memories. Join us at Adventure Camp for a journey of discovery, challenge, and endless fun.";
-  const sampleTags = ["#someTag", "#anotherTag"];
+  useEffect(() => {
+    getCampData(parseInt(params.item, 10)).then((camp) => {
+      setCampData(camp);
+    });
+  }, [params.item]);
 
   return (
     <main className="w-full h-full flex">
@@ -77,9 +55,13 @@ export default function Profile() {
             </CampItemHeaderText>
             <HeaderBody className="mt-12">
               <HeaderTagGroup className="mb-1">
-                {sampleTags.map((tag, index) => (
-                  <CampItemTag key={index}>{tag}</CampItemTag>
-                ))}
+                {campData?.tags && campData?.tags.length > 0 ? (
+                  campData?.tags.map((tag) => (
+                    <CampItemTag key={tag}>{tag}</CampItemTag>
+                  ))
+                ) : (
+                  <></>
+                )}
               </HeaderTagGroup>
               <HeaderDescriptionText className="mt-2">
                 {!campData ? " " : campData.description}
@@ -88,15 +70,16 @@ export default function Profile() {
           </CampItemHead>
         </CampItemContent>
         <VerticalLine />
-        <CampItemChat>
-          <Room chat_id={campID.toString()}>
-            <CollaborativeApp />
-          </Room>
-        </CampItemChat>
+        <CampItemChatComponent>
+          <CampItemChat>
+            <Room chat_id={params.item.toString()}>
+              <CollaborativeApp />
+            </Room>
+          </CampItemChat>
+        </CampItemChatComponent>
       </CampItem>
     </main>
   );
 }
 
-/*
- */
+//" kdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn ds kdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn dskdsnfj ndsjnf jsdjn fjdnsj fndjskn fkansdkljdfn asljknlak jnkjfna skjndf asljknlkfjans lkjn ds"

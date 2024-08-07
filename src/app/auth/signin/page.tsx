@@ -13,11 +13,11 @@ import {
   SignInHead,
   SignInMargin,
   TextOption,
-} from "@/app/component/signin/SignIn";
+} from "@/app/components/signin/SignIn";
 import css from "./page.module.css";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import {
   ErrorBodyText,
@@ -25,7 +25,7 @@ import {
   ErrorMargin,
   InvalidEmailError,
   SignInError,
-} from "@/app/component/signin/SignInError";
+} from "@/app/components/signin/SignInError";
 
 export default function SignInPage() {
   enum Error {
@@ -67,11 +67,14 @@ export default function SignInPage() {
     await signIn("credentials", {
       username: email,
       password: password,
+      callbackUrl: "/main-page/home",
     });
   }
 
   async function handleGoogleSignIn() {
-    await signIn("google");
+    await signIn("google", {
+      callbackUrl: "/main-page/home",
+    });
   }
 
   return (

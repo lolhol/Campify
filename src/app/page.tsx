@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Navbar from "./component/Navbar";
+import Navbar from "./components/Navbar";
 import cx from "classnames";
 import lodash from "lodash";
 import { Fragment, useEffect, useState } from "react";
@@ -11,44 +11,52 @@ import {
   CardBody,
   LowerDecorationText,
   UpperDecorationText,
-} from "./component/card/Card";
-import ProfanityWithMadEmoji from "./component/ProfanityWithMadEmoji";
-import Footer from "./component/Footer";
+} from "./components/card/Card";
+import ProfanityWithMadEmoji from "./components/ProfanityWithMadEmoji";
+import Footer from "./components/Footer";
 import {
   HighlightedText,
   LinkText,
   SwitchTextFont,
-} from "./component/text/TextDecorations";
+} from "./components/text/TextDecorations";
 import {
   DivList,
   DivListGrow,
   DivListGrowCenter,
-} from "./component/util/DivUtil";
+} from "./components/util/DivUtil";
 import {
   Heading,
   HeadingBody,
   HeadingHead,
   HeadingMargin,
-} from "./component/message-text/Heading";
-import { ButtonText, TitleButton } from "./component/button/TitleButton";
-import { signIn } from "next-auth/react";
+} from "./components/message-text/Heading";
+import { ButtonText, TitleButton } from "./components/button/TitleButton";
+import { signIn, useSession } from "next-auth/react";
 
 const textTypes = ["font-serif", "font-sans", "font-mono"];
 
 export default function Home() {
+  const session = useSession();
   return (
     <main>
       <DivList className="h-screen w-full">
         <Navbar
           nameOfWebsite={"Campify"}
-          pfpImage={{ src: "/default_pfp.svg", w: "w-16", h: "h-16" }}
+          pfpImage={{
+            src:
+              session.status !== "unauthenticated"
+                ? session.data?.user.image_url ?? "/default_pfp.svg"
+                : "/default_pfp.svg",
+            w: "w-16",
+            h: "h-16",
+          }}
           buttonProps={{
             content: "Sign In",
             onClick: () => {
               signIn();
             },
           }}
-          loggedIn={false}
+          loggedIn={session.status !== "unauthenticated"}
         />
 
         <Heading className="mb-24 flex-grow">
@@ -128,7 +136,7 @@ export default function Home() {
                     <LinkText href="https://ollama.com/library/llama3:8b">
                       fastest
                     </LinkText>
-                  </HighlightedText>
+                  </HighlightedText>{" "}
                   Artificial Intelligence used to recommend you the{" "}
                   <HighlightedText>best</HighlightedText> camps.
                 </LowerDecorationText>
