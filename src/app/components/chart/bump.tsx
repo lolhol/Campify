@@ -9,8 +9,14 @@ export function ProfileBumpChart(props: {
   legendLeft: String;
 }) {
   return (
-    <div className={cx(props.className, "flex items-center justify-center")}>
-      <ResponsiveBump
+    <div
+      className={cx(props.className, "flex items-center justify-center")}
+    ></div>
+  );
+}
+
+/*
+<ResponsiveBump
         data={props.data}
         colors={{ scheme: "spectral" }}
         lineWidth={3}
@@ -54,6 +60,4 @@ export function ProfileBumpChart(props: {
         margin={{ top: 1, right: 1, bottom: 50, left: 50 }}
         axisRight={null}
       />
-    </div>
-  );
-}
+      */

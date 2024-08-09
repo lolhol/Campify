@@ -11,7 +11,8 @@ import { usePathname } from "next/navigation";
 const pages = ["home", "search", /*"feed", "leaderboard",*/ "settings"];
 const extensions = ["svg", "svg", /*"png", "png",*/ "svg"];
 
-export function SideBar(props: { imageUrl: string | null }) {
+export function SideBar() {
+  const { data: session } = useSession();
   const [indicatorPosition, setIndicatorPosition] = useState(0);
   const page = usePathname();
   const nameOfPage = page.split("/").pop() ?? "";
@@ -40,7 +41,7 @@ export function SideBar(props: { imageUrl: string | null }) {
     <SideBarContainer onMouseLeave={handleMouseLeaveUpdateToDefault}>
       <SideBarHead>
         <Image
-          src={props.imageUrl ?? "/default_pfp.svg"}
+          src={session?.user.image_url ?? "/default_pfp.svg"}
           alt={"1"}
           width={1000}
           height={1000}

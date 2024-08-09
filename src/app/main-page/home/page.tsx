@@ -17,7 +17,21 @@ export default function Profile() {
             <a>The chart shows the amount of camps you attended</a>
           </RectangleTopText>
         </RectangleHead>
-        <ProfileBumpChart
+      </Rectangle>
+      <Rectangle classname="h-fit m-5">
+        <RectangleHead>
+          <RectangleHeaderText>
+            <a>Upcoming Camp Dates</a>
+          </RectangleHeaderText>
+        </RectangleHead>
+        <Calendar disabled={false} /*TODO: make this dynamic*/ />
+      </Rectangle>
+    </main>
+  );
+}
+
+/*
+<ProfileBumpChart
           className="w-80 h-3/4"
           data={[
             // TODO: make this dynamic
@@ -34,15 +48,4 @@ export default function Profile() {
           legendBottom="Years"
           legendLeft="Activities"
         />
-      </Rectangle>
-      <Rectangle classname="h-fit m-5">
-        <RectangleHead>
-          <RectangleHeaderText>
-            <a>Upcoming Camp Dates</a>
-          </RectangleHeaderText>
-        </RectangleHead>
-        <Calendar disabled={false} /*TODO: make this dynamic*/ />
-      </Rectangle>
-    </main>
-  );
-}
+        */

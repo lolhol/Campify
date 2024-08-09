@@ -3,7 +3,6 @@ import { SideBar } from "../components/dashboard/sidebar/Sidebar";
 import cx from "classnames";
 import { SessionProvider } from "next-auth/react";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import "@liveblocks/react-ui/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -11,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] });
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getServerSession(authOptions);
   //console.log(session);
 
   return (
@@ -19,9 +17,7 @@ export default async function RootLayout({
       <body className={cx(inter.className)}>
         <div className="flex h-screen w-screen">
           <div className="z-10">
-            <SideBar
-              imageUrl={session == null ? null : session.user.image_url}
-            />
+            <SideBar />
           </div>
 
           <div className="bg-[#e1f4ff] w-full h-full flex-grow overflow-y-auto z-0 p-4">
