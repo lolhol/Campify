@@ -2,17 +2,32 @@
 
 import cx from "classnames";
 import Image from "next/image";
-import { TextWithImageLeft } from "@/app/components/text/TextDecorations";
+import {
+  DeleteCampButton,
+  TextWithImageLeft,
+} from "@/app/components/text/TextDecorations";
 import Link from "next/link";
 import { Camp } from "@/interfaces/util/Camp";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export function Camps(props: { campList: Camp[] }) {
+export function Camps(props: {
+  campList: Camp[];
+  enableRemoving: boolean;
+  refresh: () => void;
+}) {
+  const router = useRouter();
+
   return (
     <div className="w-full h-full mt-16 grow">
-      <div className="flex flex-wrap flex-row gap-x-10 justify-between w-full px-20">
-        {props.campList.map((item, index) => (
+      <div className="grid grid-flow-row grid-cols-3 justify-between w-full px-20">
+        {props.campList.map((item: Camp, index) => (
           <div className="mb-10">
-            <CampWindow key={index} id={item.id}>
+            <CampWindow
+              key={index}
+              id={item.id}
+              enableRemoving={props.enableRemoving}
+            >
               <CampWindowHead>
                 <CampHeader>
                   <CampWindowHeaderText>{item.name}</CampWindowHeaderText>
@@ -55,6 +70,25 @@ export function Camps(props: { campList: Camp[] }) {
                     />
                     <CampWindowHeaderText>{item.comments}</CampWindowHeaderText>
                   </TextWithImageLeft>
+                  {!props.enableRemoving && (
+                    <DeleteCampButton
+                      onDelete={async () => {
+                        await fetch(`/api/school/db/camp/delete`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            id: item.id,
+                          }),
+                        });
+
+                        props.refresh();
+                      }}
+                    >
+                      Delete Camp
+                    </DeleteCampButton>
+                  )}
                 </CampWindowList>
               </CampWindowBase>
             </CampWindow>
@@ -69,14 +103,16 @@ export function CampWindow(props: {
   className?: string;
   id: number;
   children: React.ReactNode;
+  enableRemoving: boolean;
 }) {
   return (
     <Link
       className={cx(
         props.className,
-        "w-96 h-[500px] rounded-lg bg-white shadow-md p-5 flex flex-col cursor-pointer"
+        "w-96 h-[500px] rounded-lg bg-white shadow-md p-5 flex flex-col " +
+          (props.enableRemoving ? "cursor-pointer" : "cursor-default")
       )}
-      href={`/main-page/search/${props.id}`}
+      href={!props.enableRemoving ? "" : `/main-page/search/${props.id}`}
     >
       {props.children}
     </Link>

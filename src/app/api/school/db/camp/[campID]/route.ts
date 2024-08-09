@@ -10,5 +10,7 @@ export async function POST(
     FROM camp
     WHERE id = ${params.campID}
   `;
-  return Response.json(dbResult[0]);
+  let tmp = dbResult[0];
+  tmp.tags = tmp.tags.toString().replace("[", "").replace("]", "").split(",");
+  return Response.json(tmp);
 }

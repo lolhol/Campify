@@ -10,7 +10,7 @@ export async function POST(request: Request) {
           camp
         WHERE 
             is_public = true
-        LIMIT 10
+        LIMIT 30
     `,
   });
 }

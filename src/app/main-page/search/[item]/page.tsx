@@ -53,7 +53,7 @@ export default function Item({ params }: { params: { item: string } }) {
             <CampItemHeaderText>
               {!campData ? " " : campData.name}
             </CampItemHeaderText>
-            <HeaderBody className="mt-12">
+            <HeaderBody className="mt-5">
               <HeaderTagGroup className="mb-1">
                 {campData?.tags && campData?.tags.length > 0 ? (
                   campData?.tags.map((tag) => (

@@ -2,7 +2,7 @@
 
 import cx from "classnames";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 export function Find(props: {
   className?: string;
@@ -35,5 +35,35 @@ export function CreateNewButton(props: {
     <div className={cx(props.className, "w-16 h-16 ml-5")}>
       {props.children}
     </div>
+  );
+}
+
+export function EnableRemoveCampsSwitch(props: {
+  className?: string;
+  onClick: (state: boolean) => void;
+}) {
+  const [enabled, setEnabled] = useState(false);
+
+  const toggleSwitch = () => {
+    setEnabled(!enabled);
+    props.onClick(enabled);
+  };
+
+  return (
+    <button
+      onClick={toggleSwitch}
+      className={cx(
+        "w-16 h-8 rounded-full p-1 flex items-center",
+        enabled ? "bg-green-500" : "bg-gray-400",
+        props.className
+      )}
+    >
+      <div
+        className={cx(
+          "w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ease-in-out",
+          enabled ? "translate-x-8" : "translate-x-0"
+        )}
+      />
+    </button>
   );
 }

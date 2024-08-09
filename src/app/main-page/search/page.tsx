@@ -10,12 +10,21 @@ import { Camp } from "@/interfaces/util/Camp";
 import {
   CreateNewButton,
   CreateNewButtonLinked,
+  EnableRemoveCampsSwitch,
   Find,
 } from "@/app/components/find/Find";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+function startsWithNumber(str: string): boolean {
+  return /^[0-9]/.test(str);
+}
 
 export default function Profile() {
   const [campData, setCampData] = useState<Camp[] | null>(null);
+  const [removeCamps, setRemoveCamps] = useState(true);
+  const { data: sessionData } = useSession();
 
   async function getCampData(): Promise<GetManyCamps> {
     const res = await fetch(`/api/school/db/camp/many`, {
@@ -36,8 +45,25 @@ export default function Profile() {
 
   return (
     <main className="w-full h-full flex flex-col">
+      {startsWithNumber(sessionData?.user.email ?? "") && (
+        <EnableRemoveCampsSwitch
+          className="absolute top-2 right-2"
+          onClick={function (state: boolean): void {
+            if (!sessionData?.user) return;
+            setRemoveCamps(state);
+          }}
+        />
+      )}
+
       <Find>
-        <SearchBox />
+        <SearchBox
+          onCampsUpdate={async function (camps) {
+            setCampData(camps == null ? (await getCampData()).camps : camps);
+          }}
+          getCurrentRenderedCamps={function (): Camp[] | null {
+            return campData ?? null;
+          }}
+        />
         <CreateNewButton>
           <CreateNewButtonLinked linkToGoTo={"/main-page/search/create-new"}>
             <Image
@@ -51,7 +77,16 @@ export default function Profile() {
         </CreateNewButton>
       </Find>
 
-      <Camps campList={campData ?? []} />
+      <Camps
+        campList={campData ?? []}
+        enableRemoving={removeCamps}
+        refresh={function (): void {
+          getCampData().then((camp) => {
+            if (camp.camps.length == 0) return;
+            setCampData(camp.camps);
+          });
+        }}
+      />
     </main>
   );
 }

@@ -10,32 +10,33 @@ export async function POST(request: Request) {
     {
       editing_camp_id: number | null;
     }[]
-  >`SELECT editing_camp_id FROM account WHERE id = ${json.userId};`;
+  >`SELECT editing_camp_id FROM account WHERE id = ${json.userId}`;
   console.log(dbAccountRes[0]);
   if (!dbAccountRes[0].editing_camp_id) {
-    const result = await sql<{ id: number }[]>`INSERT INTO camp 
-    (
-      likes,
-      comments,
-      description,
-      name,
-      image,
-      short_description,
-      tags,
-      is_public
-    )
-    VALUES 
-    (
-       0, 
-       0, 
-       '',
-       '',
-       '',
-       '',
-       '',
-       false
-    )
-    RETURNING id;`;
+    const result = await sql<{ id: number }[]>`
+      INSERT INTO camp 
+      (
+        likes,
+        comments,
+        description,
+        name,
+        image,
+        short_description,
+        tags,
+        is_public
+      )
+      VALUES 
+      (
+        0, 
+        0, 
+        '',
+        '',
+        '',
+        '',
+        '',
+        false
+      )
+      RETURNING id`;
 
     console.log(result[0] + "!!!!");
 

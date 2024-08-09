@@ -2,9 +2,11 @@
 
 .loader {
   position: relative;
-  animation: fadeOut 0.5s ease-in-out forwards, shrink 0.5s ease-in-out forwards,
+  animation:
+    fadeOut 0.5s ease-in-out forwards,
+    shrink 0.5s ease-in-out forwards,
     rotateOut 0.5s ease-in-out forwards;
-  animation-delay: 1.5s; /* Adjust delay to match your request duration */
+  animation-delay: 0s; /* Adjust delay to match your request duration */
 }
 
 .resultIcon {
@@ -18,7 +20,9 @@
   justify-content: center;
   opacity: 1;
   transform: scale(0.5);
-  animation: fadeIn 0.5s ease-in-out forwards, grow 0.5s ease-in-out forwards,
+  animation:
+    fadeIn 0.5s ease-in-out forwards,
+    grow 0.5s ease-in-out forwards,
     rotateIn 0.5s ease-in-out forwards;
   animation-delay: 1.5s;
 }

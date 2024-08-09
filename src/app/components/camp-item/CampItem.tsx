@@ -11,7 +11,7 @@ export function CampItem(props: {
     <div
       className={cx(
         props.className,
-        "w-full h-full flex pl-5 pr-5 gap-10 grow",
+        "w-full h-full flex pl-5 pr-5 gap-10 grow"
       )}
     >
       {props.children}
@@ -27,7 +27,7 @@ export function CampItemChatComponent(props: {
     <div
       className={cx(
         props.className,
-        "flex flex-col grow overflow-y-auto z-50 pr-4",
+        "flex flex-col grow overflow-y-auto z-50 pr-4 mt-10"
       )}
       style={{ scrollbarWidth: "thin" }}
     >
@@ -44,7 +44,7 @@ export function CampItemContent(props: {
     <div
       className={cx(
         props.className,
-        "w-[69%] h-full flex flex-col overflow-y-auto",
+        "w-[69%] h-full flex flex-col overflow-y-auto mt-10"
       )}
       style={{
         scrollbarWidth: "none",
@@ -71,7 +71,7 @@ export function CampItemDividerLine(props: { className?: string }) {
     <div
       className={cx(
         props.className,
-        "w-full h-[1px] bg-gray-400 rounded-xl my-3",
+        "w-full h-[1px] bg-gray-400 rounded-xl my-3"
       )}
     />
   );
@@ -116,7 +116,7 @@ export function CampItemTag(props: {
     <div
       className={cx(
         props.className,
-        "rounded-full bg-gray-300 border-gray-200 flex items-center justify-center p-1 px-2 text-sm",
+        "flex items-center justify-center cursor-default rounded-full bg-blue-100 border border-blue-300 text-blue-800 px-3 py-1 text-sm font-medium shadow-sm hover:bg-blue-200 transition-colors duration-200"
       )}
     >
       {props.children}
@@ -179,7 +179,7 @@ export function ChatItemImage(props: { className?: string; path: string }) {
       height={1000}
       className={cx(
         props.className,
-        "w-10 h-10 rounded-full border-black border-[1.5px]",
+        "w-10 h-10 rounded-full border-black border-[1.5px]"
       )}
     />
   );
