@@ -45,7 +45,7 @@ export default function Profile() {
 
   return (
     <main className="w-full h-full flex flex-col">
-      {startsWithNumber(sessionData?.user.email ?? "") && (
+      {!startsWithNumber(sessionData?.user.email ?? "") && (
         <EnableRemoveCampsSwitch
           className="absolute top-2 right-2"
           onClick={function (state: boolean): void {

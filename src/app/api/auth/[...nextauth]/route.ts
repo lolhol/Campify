@@ -71,6 +71,8 @@ const authOptions: AuthOptions = {
           return true;
         }
 
+        if (!user.email?.includes("@pinewood.edu")) return false;
+
         await sql`
           INSERT INTO account
           (

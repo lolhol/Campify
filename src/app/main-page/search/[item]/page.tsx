@@ -29,6 +29,7 @@ import { Camp } from "@/interfaces/util/Camp";
 
 export default function Item({ params }: { params: { item: string } }) {
   const [campData, setCampData] = useState<Camp | null>(null);
+  
   async function getCampData(id: number): Promise<Camp> {
     const res = await fetch(`/api/school/db/camp/${id}`, {
       method: "POST",
